@@ -1,0 +1,43 @@
+body{
+    background-color: #cadae6;
+}
+
+.warp{
+    width: 600px;
+    margin: auto;
+    font-family: Arial;
+}
+.search{
+    display: inline-block;
+}
+.pagination{
+    display: inline-block;
+    float: right;
+}
+.content-table{
+    margin: 10px 0;
+    width: 100%;
+}
+.content-table td{
+    margin: 50px 0;
+}
+.content-table th:first-of-type{
+    width: 85%;
+    text-align: left;
+}
+
+.pagination-btns span:first-of-type{
+    float: right
+}
+
+a{
+    color: inherit;
+    text-decoration: none;
+}
+a:hover{
+    color: coral;
+    text-decoration: underline;
+}
+span{
+    
+}

@@ -1,17 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>EPAM Ajax Test</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="header">
-    Heroes
+<div class="warp">
+    <header>
+        <div class="header">
+            <h1>Heroes</h1>
+        </div>
+    </header>
+    <div class="search-pagination">
+        <div class="pagination">Shown 11-20 of 34</div>
+        <div class="search">
+            <form name="search-form" action="" method="post" target="_self">
+                <input id="search-input" name="search-input" type="text">
+                <button name="search-btn" id="search-btn">GO</button>
+            </form>
+        </div>
+    </div>
+    <div class="content-table">
+        <table>
+            <tbody>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Episodes
+                </th>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>Episodes</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination-btns">
+        <span><a href="#">Next</a></span>
+        <span><a href="#">Previous</a></span>
+    </div>
 </div>
-<div class="search">
-    <form name="search-form" action="" method="post" target="_self">
-        <input id="search-input" name="search-input" >
-    </form>
-</div>
+<script src="jQuery.js"></script>
 </body>
 </html>
