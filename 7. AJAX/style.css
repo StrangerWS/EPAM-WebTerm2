@@ -38,6 +38,6 @@ a:hover{
     color: coral;
     text-decoration: underline;
 }
-span{
-    
+.pagination-btns span{
+    padding: 1px;
 }

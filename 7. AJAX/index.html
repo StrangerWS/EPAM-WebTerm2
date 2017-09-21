@@ -13,7 +13,7 @@
         </div>
     </header>
     <div class="search-pagination">
-        <div class="pagination">Shown 11-20 of 34</div>
+        <div class="pagination">Shown 11-20 of <span id="size"></span></div>
         <div class="search">
             <form name="search-form" action="" method="post" target="_self">
                 <input id="search-input" name="search-input" type="text">
@@ -23,27 +23,23 @@
     </div>
     <div class="content-table">
         <table>
-            <tbody>
+            <tbody id="table">
             <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Episodes
-                </th>
-            </tr>
-            <tr>
-                <td>Name</td>
-                <td>Episodes</td>
+                <th>Name</th>
+                <th>Episodes</th>
             </tr>
             </tbody>
         </table>
     </div>
     <div class="pagination-btns">
-        <span><a href="#">Next</a></span>
-        <span><a href="#">Previous</a></span>
+        <span><a href="#">Next ⤃</a></span>
+        <span><a href="#">⤂ Previous</a></span>
     </div>
 </div>
-<script src="jQuery.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.2.1.js"
+        integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+        crossorigin="anonymous"></script>
+<script src="script.js"></script>
 </body>
 </html>
