@@ -30,11 +30,8 @@ body{
     float: right
 }
 
-a{
-    color: inherit;
-    text-decoration: none;
-}
-a:hover{
+.pagination-btns span:hover{
+    cursor: pointer;
     color: coral;
     text-decoration: underline;
 }

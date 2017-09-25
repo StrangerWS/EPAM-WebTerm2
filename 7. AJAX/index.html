@@ -13,7 +13,8 @@
         </div>
     </header>
     <div class="search-pagination">
-        <div class="pagination">Shown 11-20 of <span id="size"></span></div>
+        <div class="pagination">Shown <span id="start-num"></span>-<span id="end-num"></span> of <span id="size"></span>
+        </div>
         <div class="search">
             <form name="search-form" action="" method="post" target="_self">
                 <input id="search-input" name="search-input" type="text">
@@ -23,17 +24,20 @@
     </div>
     <div class="content-table">
         <table>
-            <tbody id="table">
+            <thead>
             <tr>
                 <th>Name</th>
                 <th>Episodes</th>
             </tr>
+            </thead>
+            <tbody id="table">
+
             </tbody>
         </table>
     </div>
     <div class="pagination-btns">
-        <span><a href="#">Next ⤃</a></span>
-        <span><a href="#">⤂ Previous</a></span>
+        <span id="next-btn" onclick="nextPage()">Next ⤃</span>
+        <span id="prev-btn" onclick="prevPage()">⤂ Previous</span>
     </div>
 </div>
 <script
