@@ -3,6 +3,7 @@ $(document).ready(function () {
     loadData();
 });
 
+
 function loadData(params) {
     $.ajax({
         type: 'GET',
@@ -18,17 +19,17 @@ function loadData(params) {
             drawMeta();
             drawData(data.data);
 
-            if(from + 10 > length){
+            if (from + 10 > length) {
                 $nextBtn.hide();
             }
             else {
                 $nextBtn.show();
             }
 
-            if(from === 0){
-               $prevBtn.hide();
+            if (from === 0) {
+                $prevBtn.hide();
             }
-            else{
+            else {
                 $prevBtn.show();
             }
 
@@ -37,24 +38,32 @@ function loadData(params) {
 }
 
 function drawMeta() {
-    $('#start-num').text(from + 1);
-    $('#size').text(length)
+    $('#start-num').text(length === 0 ? 0:from + 1);
+    $('#size').text(length);
+    $('#end-num').text(from + 9 <= length ? from + 10 : length);
 }
 
 function drawData(data) {
-    $('#end-num').text(data[data.length - 1].id + 1);
+
     var $table = $('#table');
     $table.empty();
+    var tableContent;
     for (var i = 0; i < data.length; i++) {
-        $table.append('<tr><td>' + data[i].name + '</td><td>' + data[i].episodes + '</td></tr>')
+        tableContent += '<tr><td>' + data[i].name + '</td><td>' + data[i].episodes + '</td></tr>';
     }
+    $table.append(tableContent);
 }
 
 function nextPage() {
-    loadData("from=" + (from + 10));
+    alert("from=" + (from + 10) + "&" + searchText);
+    loadData("from=" + (from + 10) + "&" + searchText);
 }
 
 function prevPage() {
-    loadData("from=" + (from - 10));
+    loadData("from=" + (from - 10) + "&" + searchText);
+}
 
+function search() {
+    searchText =  "q=" + $('#search-input').val();
+    loadData(searchText);
 }
