@@ -1,78 +1,87 @@
-var loadDataModule = (function () {
+;var loadDataModule = (function () {
     var from,
-        searchText;
+        searchText,
+        $nextBtn = $('#next-btn'),
+        $prevBtn = $('#prev-btn'),
+        $searchBtn = $('#search-btn'),
+        $searchInput = $('#search-input'),
+        $table = $('#table'),
+        $startNum = $('#start-num'),
+        $endNum = $('#end-num'),
+        $size = $('#size');
+
+    function drawMeta(from, length) {
+        $startNum.text(length === 0 ? 0 : from + 1);
+        $size.text(length);
+        $endNum.text(from + 9 <= length ? from + 10 : length);
+    }
+
+    function drawData(data) {
+        $table.empty();
+        var tableContent = '';
+        for (var i = 0; i < data.length; i++) {
+            tableContent += '<tr><td>' + data[i].name + '</td><td>' + data[i].episodes + '</td></tr>';
+        }
+        $table.append(tableContent);
+    }
+
+    function pagination(flag) {
+        if (flag) {
+            loadData(from + 10, searchText);
+        } else {
+            loadData(from - 10, searchText);
+        }
+    }
+
+
+    function search() {
+        searchText = "q=" + $searchInput.val();
+        loadData(from, searchText);
+    }
+
+    function paginationHiding(from, length) {
+        if (from + 10 > length) $nextBtn.hide();
+        else $nextBtn.show();
+
+        if (from === 0) $prevBtn.hide();
+        else $prevBtn.show();
+    }
+
+    function loadData(from, query) {
+        $.ajax({
+            type: 'GET',
+            url: 'http://demo.webility.ru/api',
+            data: {
+                from: from,
+                q: query
+            },
+            dataType: 'json',
+            success: function (data) {
+
+                drawMeta(data.meta.from, data.meta.length);
+                drawData(data.data);
+                paginationHiding(data.meta.from, data.meta.length);
+
+            }
+        })
+    }
 
     return {
-        loadData: function (params) {
-            $.ajax({
-                type: 'GET',
-                url: 'http://demo.webility.ru/api',
-                data: params,
-                dataType: 'json',
-                success: function (data) {
-                    var $nextBtn = $('#next-btn');
-                    var $prevBtn = $('#prev-btn');
-
-                    from = data.meta.from;
-                    length = data.meta.length;
-                    loadDataModule.drawMeta();
-                    loadDataModule.drawData(data.data);
-
-                    if (from + 10 > length) {
-                        $nextBtn.hide();
-                    }
-                    else {
-                        $nextBtn.show();
-                    }
-
-                    if (from === 0) {
-                        $prevBtn.hide();
-                    }
-                    else {
-                        $prevBtn.show();
-                    }
-
-                }
-            })
-        },
-
-        drawMeta: function () {
-            $('#start-num').text(length === 0 ? 0 : from + 1);
-            $('#size').text(length);
-            $('#end-num').text(from + 9 <= length ? from + 10 : length);
-        },
-
-        drawData: function (data) {
-
-            var $table = $('#table');
-            $table.empty();
-            var tableContent;
-            for (var i = 0; i < data.length; i++) {
-                tableContent += '<tr><td>' + data[i].name + '</td><td>' + data[i].episodes + '</td></tr>';
-            }
-            $table.append(tableContent);
-        },
-
-        nextPage: function () {
-            alert("from=" + (from + 10) + "&" + loadDataModule.searchText);
-            loadDataModule.loadData("from=" + (from + 10) + "&" + searchText);
-        },
-
-        prevPage: function () {
-            loadDataModule.loadData("from=" + (from - 10) + "&" + searchText);
-        },
-
-        search: function () {
-            searchText = "q=" + $('#search-input').val();
-            loadDataModule.loadData(searchText);
+        initialize: function () {
+            $nextBtn.bind('click', function () {
+                pagination(true)
+            });
+            $prevBtn.bind('click', function () {
+                pagination(false)
+            });
+            $searchBtn.bind('click', function () {
+                search()
+            });
+            loadData();
         }
     }
 }());
 
 $(document).ready(function () {
-    loadDataModule.loadData();
+    loadDataModule.initialize();
 });
-
-$('#next-btn').click(loadDataModule.nextPage());
-$('#prev-btn').click(loadDataModule.prevPage());
-$('#search-btn').click(loadDataModule.search());
