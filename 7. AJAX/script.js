@@ -1,19 +1,15 @@
 ;var loadDataModule = (function () {
-    var from,
+    var globalNum,
         searchText,
         $nextBtn = $('#next-btn'),
         $prevBtn = $('#prev-btn'),
         $searchBtn = $('#search-btn'),
         $searchInput = $('#search-input'),
         $table = $('#table'),
-        $startNum = $('#start-num'),
-        $endNum = $('#end-num'),
-        $size = $('#size');
+        $paginationInfo = $('#pagination-info');
 
     function drawMeta(from, length) {
-        $startNum.text(length === 0 ? 0 : from + 1);
-        $size.text(length);
-        $endNum.text(from + 9 <= length ? from + 10 : length);
+        $paginationInfo.text("Shown " + (length === 0 ? 0 : from + 1) + " - " + (from + 9 <= length ? from + 10 : length) + " of " + length);
     }
 
     function drawData(data) {
@@ -27,22 +23,21 @@
 
     function pagination(flag) {
         if (flag) {
-            loadData(from + 10, searchText);
+            loadData(globalNum + 10, searchText);
         } else {
-            loadData(from - 10, searchText);
+            loadData(globalNum - 10, searchText);
         }
     }
 
 
     function search() {
         searchText = "q=" + $searchInput.val();
-        loadData(from, searchText);
+        loadData(globalNum, searchText);
     }
 
     function paginationHiding(from, length) {
         if (from + 10 > length) $nextBtn.hide();
         else $nextBtn.show();
-
         if (from === 0) $prevBtn.hide();
         else $prevBtn.show();
     }
@@ -57,7 +52,7 @@
             },
             dataType: 'json',
             success: function (data) {
-
+                globalNum = data.meta.from;
                 drawMeta(data.meta.from, data.meta.length);
                 drawData(data.data);
                 paginationHiding(data.meta.from, data.meta.length);
