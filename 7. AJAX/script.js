@@ -32,8 +32,8 @@
     }
 
     function drawData(data) {
-        $table.empty();
         var tableContent = '';
+        $table.empty();
         for (var i = 0; i < data.length; i++) {
             tableContent += '<tr><td>' + data[i].name + '</td><td>' + data[i].episodes + '</td></tr>';
         }
@@ -47,8 +47,8 @@
         else $prevBtn.show();
     }
 
-    function pagination(flag) {
-        if (flag) {
+    function pagination(direction) {
+        if (direction) {
             loadData(globalNum + 10, searchText);
         } else {
             loadData(globalNum - 10, searchText);
