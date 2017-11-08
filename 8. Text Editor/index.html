@@ -25,13 +25,19 @@
                 Edit
             </button>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="#"><img src="glyphicons/png/glyphicons-222-unshare.png" height="18" width="24"/> Undo</a>
-                <a class="dropdown-item" href="#"><img src="glyphicons/png/glyphicons-223-share.png" height="18" width="24"/> Redo</a>
+                <a class="dropdown-item" href="#"><img src="glyphicons/png/glyphicons-222-unshare.png" height="18"
+                                                       width="24"/> Undo</a>
+                <a class="dropdown-item" href="#"><img src="glyphicons/png/glyphicons-223-share.png" height="18"
+                                                       width="24"/> Redo</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#"><img src="glyphicons/png/glyphicons-599-scissors-alt.png" height="22" width="25"/> Cut</a>
-                <a class="dropdown-item" href="#"><img src="glyphicons/png/glyphicons-512-copy.png" height="24" width="24"/> Copy</a>
-                <a class="dropdown-item" href="#"><img src="glyphicons/png/glyphicons-513-paste.png" height="24" width="24"/> Paste</a>
-                <a class="dropdown-item" href="#"><img src="glyphicons/png/glyphicons-605-text-size.png" height="22" width="25"/> Paste as text</a>
+                <a class="dropdown-item" href="#"><img src="glyphicons/png/glyphicons-599-scissors-alt.png" height="22"
+                                                       width="25"/> Cut</a>
+                <a class="dropdown-item" href="#"><img src="glyphicons/png/glyphicons-512-copy.png" height="24"
+                                                       width="24"/> Copy</a>
+                <a class="dropdown-item" href="#"><img src="glyphicons/png/glyphicons-513-paste.png" height="24"
+                                                       width="24"/> Paste</a>
+                <a class="dropdown-item" href="#"><img src="glyphicons/png/glyphicons-605-text-size.png" height="22"
+                                                       width="25"/> Paste as text</a>
             </div>
         </div>
     </div>
@@ -39,51 +45,76 @@
 <hr/>
 <div class="container-fluid">
     <div class="btn-group">
-        <div class="btn btn-light" id="back-btn"><img src="glyphicons/png/glyphicons-222-unshare.png" height="18" width="24"/></div>
-        <div class="btn btn-light" id="forward-btn"><img src="glyphicons/png/glyphicons-223-share.png" height="18" width="24"/></div>
+        <button class="btn btn-light" id="back-btn"><img src="glyphicons/png/glyphicons-222-unshare.png" height="18"
+                                                         width="24"/></button>
+        <button class="btn btn-light" id="forward-btn"><img src="glyphicons/png/glyphicons-223-share.png" height="18"
+                                                            width="24"/></button>
     </div>
     <div class="btn-group">
-        <div class="btn btn-light" id="bold-btn"><img src="glyphicons/png/glyphicons-103-bold.png" height="24" width="19"/></div>
-        <div class="btn btn-light" id="italic-btn"><img src="glyphicons/png/glyphicons-102-italic.png" height="24" width="14"/></div>
-        <div class="btn btn-light" id="underline-btn"><img src="glyphicons/png/glyphicons-104-text-underline.png" height="24" width="20"/>
+        <button class="btn btn-light" id="bold-btn"><img src="glyphicons/png/glyphicons-103-bold.png" height="24"
+                                                         width="19"/></button>
+        <button class="btn btn-light" id="italic-btn"><img src="glyphicons/png/glyphicons-102-italic.png" height="24"
+                                                           width="14"/></button>
+        <button class="btn btn-light" id="underline-btn"><img src="glyphicons/png/glyphicons-104-text-underline.png"
+                                                              height="24" width="20"/></button>
+    </div>
+    <div class="btn-group">
+        <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown"><img
+                    src="glyphicons/png/glyphicons-114-justify.png"
+                    height="21" width="24"/></button>
+            <div class="dropdown-menu">
+                <div class="btn btn-light" id="left-align-btn"><img src="glyphicons/png/glyphicons-111-align-left.png"
+                                                                       height="21" width="24"/></div>
+                <div class="btn btn-light" id="center-align-btn"><img
+                        src="glyphicons/png/glyphicons-112-align-center.png"
+                        height="21" width="24"/></div>
+                <div class="btn btn-light" id="right-align-btn"><img src="glyphicons/png/glyphicons-113-align-right.png"
+                                                                     height="21" width="24"/></div>
+            </div>
         </div>
     </div>
 </div>
 <hr/>
 <div class="container-fluid">
-<div class="form-group">
-    <div class="text-editor-area" id="text-area" contenteditable="true">
-        <b><i>Сессия 1</i></b>.
-        Сюжет: Группу нанимает семья Танака, которая потеряла главу, Кацуро. Они рассказывают, что в последнее время Танака Кацуро вёл себя довольно странно - он часто опаздывал на работу, ссорился с коллегами и заказчиками, а вечерами запирался в комнате или уезжал куда-то, не объясняя причины. За три дня до гибели он начал избивать детей, увозить куда-то и привозить только под утро. Дети же вообще ничего не помнили о ночных совместных похождениях с отцом.
-        Чтобы выяснить подробности, группа отправляется в Токио, где и находится организация Танака Кацуро. Они расспрашивают коллег и подчинённых по поводу недавних событий. Пара людей даёт некоторые подсказки - секретарь и помощник. Они рассказывают, что перед всеми изменениями Танака Кацуро заключил одну сделку с небольшой, но многообещающей компанией. Правда, от клиента у всего отдела кровь стыла в жилах. Казалось бы, это был самый обычный дед, но в его взгляде проглядывалось что-то… Пугающее. Создавалось ощущение, что дед контролировал всех, с кем мог установить зрительный контакт.
-        Узнав название компании, группа отправляется туда. Там их тепло встречает молодой человек, который, однако, ничего не рассказывает насчёт сделки. Да и сам парень довольно странный - во-первых, он европеец, а европейцев по первичным данным не чтут в этой компании, а во-вторых он как-то заметно нервничает и поглядывает по сторонам. Напоследок парень предлагает поддерживать связь по телефону.
-        Вернувшись ни с чем, в гостинице все засыпают. Однако, ночью некоторые члены группы замечают слежку.
+    <div class="form-group">
+        <div class="text-editor-area" id="text-area" contenteditable="true">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend felis nec tincidunt
+            facilisis. Donec ut elit iaculis, facilisis elit sed, tincidunt quam. Pellentesque varius luctus purus sit
+            amet maximus. Nulla malesuada vel risus sed imperdiet. Suspendisse id risus cursus, commodo magna vitae,
+            lacinia libero. Nulla cursus pulvinar vestibulum. Phasellus non risus nec mi dignissim posuere quis nec
+            enim. Morbi et velit sed metus blandit aliquet. Phasellus aliquet commodo orci eu semper. Nullam faucibus
+            dui mauris, et rutrum nunc pellentesque sit amet. Praesent a nunc ut nisl suscipit rutrum. Sed fringilla
+            mauris sed nulla hendrerit, et semper leo cursus. Etiam eu ipsum dignissim quam auctor ullamcorper at sit
+            amet eros. Curabitur cursus eu leo sed mollis. Ut non erat eu urna vehicula placerat mollis quis orci.
+            Curabitur tempor neque nisi, fringilla porta est mattis ac.
 
-        На следующее утро семья Танака лишается старшего сына. Он был найден там же, где и его отец - в лесу Аокигахара, на том же самом месте. Все следы на теле самоубийц одинаковы, что наводит на мысль о том, что это не совсем самоубийства.
-        Группа отправляется к местным историкам. Они узнают, что в этом лесу не так давно начали расти случаи самоубийств, которые связывают с выходом в 1993 году книги “Полное руководство по самоубийству”. Но сами историки в это слабо верят - им кажется, что здесь замешано нечто паранормальное, учитывая детали смерти Танака. Группе рассказывают о том, что с древних времён сюда приводили людей умирать. Этот лес хранит огромное количество тел, многие из них даже не были найдены. Говорят, что все, кто туда заходит… Просто не выходят обратно. Некоторые считают, что это дело рук призраков.
+            Sed vel porttitor sapien. Integer malesuada est in porttitor gravida. In hac habitasse platea dictumst.
+            Aenean eget velit at purus sollicitudin maximus sit amet in leo. Nam egestas feugiat lobortis. Donec maximus
+            consectetur auctor. Vestibulum vestibulum mi nec velit bibendum, facilisis mattis urna sagittis. Nunc a
+            purus efficitur ipsum interdum accumsan.
 
+            Vivamus iaculis nunc ac libero sodales, sed facilisis ante aliquam. Pellentesque a ligula risus. Proin quis
+            quam convallis mauris dictum semper. Maecenas a quam convallis diam pretium imperdiet sed at nisi. Nullam ut
+            luctus lectus. Nam non rhoncus ex, ut finibus magna. Quisque tempus tincidunt ligula, sit amet porttitor
+            nisl. Duis quis tortor mi. Duis justo tellus, sollicitudin sodales malesuada non, scelerisque in nunc.
+            Mauris tempor enim nec odio vulputate sollicitudin. Nunc imperdiet fringilla tincidunt. Vestibulum blandit
+            lorem quis rutrum condimentum.
 
-        ВВЕДЕНИЕ
-        Ведущий: Ваша группа получает тревожный звонок от Танака Аки. Она - жена владельца компании “Танака Индастриз”, Танака Кацуро, который недавно был найден мёртвым в лесу Аокигахара, также известном, как “лес самоубийц”. Вы прибываете в деревню Нарусава, в которой и проживает семья Танака.
-        На первый взгляд смерть выглядела, как типичное самоубийство - Кацуро нашли повешенным на дереве, никаких следов насильственной смерти не было. Однако, Аки считает, что всё здесь не совсем правда.
-        В доме кроме Аки находятся два сына и дочь.
-        РАЗГОВОР С АКИ
-        Аки (дрожащим голосом): Мой муж в последнее время очень изменился. Я никогда не видела его таким, каким он был эту неделю. Знаете, у него на работе был очень важный контракт, и после этого он… Он стал другим. Он стал грубым, нелюдимым, часто ссорился со мной, с коллегами. Он даже… Он даже детей бил, хотя до этого такого не было! Вот Ичиро, взгляните.
-        (Показывает избитую спину старшего сына)
-        Он забирал Ичиро с собой по вечерам. Они уезжали куда-то на всю ночь… Куда вы ездили, сынок?
-        Ичиро (подавленно): Н-не помню… Вообще не помню, чтобы мы с папой ездили куда-то.
-        Аки: Вот видите… А они ездили куда-то три дня подряд. Я не знаю, что он с ним делал, но, боюсь, не по своей воле. Можете узнать на работе, там уже все в курсе. Компания “Танака Индастриз”, в Токио. Я предупрежу, если вы соберётесь туда.
+            Integer iaculis, felis scelerisque ultricies rutrum, odio ipsum condimentum est, nec rutrum leo lorem eget
+            ipsum. Pellentesque augue dui, venenatis sed urna nec, sollicitudin lacinia lacus. Proin ac molestie neque.
+            Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus blandit
+            condimentum ipsum, at commodo nibh vulputate nec. Etiam egestas sit amet urna tempor volutpat. Fusce in
+            eleifend velit.
 
-        РАЗГОВОР С ИЧИРО
-        Ичиро: Я ничего не знаю, правда. Папа… Он никогда таким не был. Все говорят, что он увозил меня куда-то, но я правда ничего не помню! (всхлипывает) До всего этого он всегда был добр к нам… Но в последнее время его будто подменили. Стоило нам что-нибудь не то сказать, завязать речь о работе… Он будто с цепи срывался. Простите, я не могу… (Убегает в комнату)
-
-        РАЗГОВОР С ФУДО
-        Фудо: Папа часто сидел у себя в кабинете, подолгу с кем-то разговаривал по телефону. И если он замечал, что кто-то подслушивает, он начинал лупить нас. Я так попадался пару раз, но ничего толком не слышал. Только… Только про компанию - кому она перейдёт после его смерти или в этом духе… Но я про это вообще ничего не знаю.
-
-        РАЗГОВОР С ИМА
-        Има подавлена и на вопрос знает ли она что-то лишь отрицательно мотает головой, изредка всхлипывая.
+            Nunc volutpat tellus eros, vitae bibendum sem condimentum scelerisque. Sed fringilla odio et augue
+            ullamcorper, a euismod velit laoreet. Mauris sed justo nec diam molestie varius. Sed nec nisl lorem. Nunc
+            consectetur magna quis ullamcorper interdum. Integer fermentum ligula et venenatis faucibus. Morbi accumsan
+            mollis augue, et ullamcorper ligula bibendum non. Maecenas placerat posuere orci. Morbi convallis quam
+            scelerisque fermentum pretium. Praesent vestibulum odio sed justo pellentesque, vitae pellentesque leo
+            fermentum.
+        </div>
     </div>
-</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

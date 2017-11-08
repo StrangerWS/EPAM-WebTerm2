@@ -6,6 +6,10 @@
         $forwardBtn = $('#forward-btn'),
         $backBtn = $('#back-btn'),
         $textArea = $('#text-area'),
+        $leftAlignBtn = $('#left-align-btn'),
+        $rightAlignBtn = $('#right-align-btn'),
+        $centerAlignBtn = $('#center-align-btn'),
+        $justifyAlignBtn = $('#justify-align-btn'),
         selection,
         historyIndex = 0;
 
@@ -23,19 +27,28 @@
         range.insertNode($span.get(0));
         saveInHistory();
     };
+    let setAlign = (direction) => {
+        $textArea.addClass(direction + "-align");
+    };
     let saveInHistory = () => {
+        if (historyIndex !== localStorage.length){
+            for (let i = historyIndex; i < localStorage.length; i++){
+                localStorage.removeItem(i);
+            }
+        }
         localStorage.setItem(historyIndex++, $textArea.html());
     };
     let historyIteration = (direction) => {
         if (direction && historyIndex < localStorage.length - 1) {
             $textArea.html(localStorage.getItem(++historyIndex));
-        } else if (!direction && historyIndex > 0) {
+        } else if (!direction && historyIndex > -1) {
             $textArea.html(localStorage.getItem(--historyIndex));
         }
     };
 
     return {
         init: () => {
+            saveInHistory();
             $boldBtn.click(() => {
                 decorate("bold");
             });
@@ -45,12 +58,24 @@
             $underlineBtn.click(() => {
                 decorate("underline");
             });
+            $leftAlignBtn.click(() => {
+                setAlign("left");
+            });
+            $centerAlignBtn.click(() => {
+                setAlign("center");
+            });
+            $rightAlignBtn.click(() => {
+                setAlign("right");
+            });
+            $justifyAlignBtn.click(() => {
+                setAlign("justify");
+            });
             $backBtn.click(() => {
                 historyIteration(false)
             });
             $forwardBtn.click(() => {
                 historyIteration(true)
-            })
+            });
         }
     }
 })();
