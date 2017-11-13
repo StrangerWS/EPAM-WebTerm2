@@ -5,6 +5,8 @@
         $underlineBtn = $('#underline-btn'),
         $forwardBtn = $('#forward-btn'),
         $backBtn = $('#back-btn'),
+        $backDropdown = $('#back-dropdown'),
+        $fwdDropdown = $('#fwd-dropdown'),
         $textArea = $('#text-area'),
         $leftAlignBtn = $('#left-align-btn'),
         $rightAlignBtn = $('#right-align-btn'),
@@ -21,8 +23,9 @@
         selection = document.getSelection();
         let range = selection.getRangeAt(0),
             selectedContent = selection.toString(),
-            $span = $('<span />').addClass(decorator).html(selectedContent);
+            $span = $(decorator).html(selectedContent);
 
+        alert(range.startContainer.textContent);
         range.deleteContents();
         range.insertNode($span.get(0));
         saveInHistory();
@@ -50,13 +53,13 @@
         init: () => {
             saveInHistory();
             $boldBtn.click(() => {
-                decorate("bold");
+                decorate("<b />");
             });
             $italicBtn.click(() => {
-                decorate("italic");
+                decorate("<i />");
             });
             $underlineBtn.click(() => {
-                decorate("underline");
+                decorate("<u />");
             });
             $leftAlignBtn.click(() => {
                 setAlign("left");
@@ -73,7 +76,13 @@
             $backBtn.click(() => {
                 historyIteration(false)
             });
+            $backDropdown.click(() => {
+                historyIteration(false)
+            });
             $forwardBtn.click(() => {
+                historyIteration(true)
+            });
+            $fwdDropdown.click(() => {
                 historyIteration(true)
             });
         }
