@@ -15,46 +15,70 @@
         $copyDropdown = $('#copy-dropdown'),
         $pasteDropdown = $('#paste-dropdown'),
         $pasteTextDropdown = $('#paste-text-dropdown'),
+        $imgBtn = $("#img-btn"),
+        $picForm = $("#pic-form"),
+        $picBtnConfirm = $("#pic-btn-confirm"),
+        $picBtnCancel = $("#pic-btn-cancel"),
+        $picUrlInput = $("#pic-url-input"),
         historyIndex = 0,
         selection,
-        buffer;
+        buffer = "",
 
-    let checkAvaliable = () => {
-        $backBtn.disabled = (historyIndex === 0);
-        $forwardBtn.disabled = (historyIndex === localStorage.length);
-    };
-    let execCmd = (decorator, ui, value) => {
-        document.execCommand(decorator, ui, value);
-    };
+        checkAvaliable = () => {
+            $backBtn.disabled = (historyIndex === 0);
+            $forwardBtn.disabled = (historyIndex === localStorage.length);
+        },
 
-    let saveInHistory = () => {
-        if (historyIndex !== localStorage.length) {
-            for (let i = historyIndex; i < localStorage.length; i++) {
-                localStorage.removeItem(i);
+        execCmd = (decorator, ui, value) => {
+            document.execCommand(decorator, ui, value);
+        },
+
+        saveInHistory = () => {
+            if (historyIndex !== localStorage.length) {
+                for (let i = historyIndex; i < localStorage.length; i++) {
+                    localStorage.removeItem(i);
+                }
             }
-        }
-        localStorage.setItem(historyIndex++, $textArea.html());
-    };
-    let historyIteration = (direction) => {
-        if (direction && historyIndex < localStorage.length - 1) {
-            $textArea.html(localStorage.getItem(++historyIndex));
-        } else if (!direction && historyIndex > -1) {
-            $textArea.html(localStorage.getItem(--historyIndex));
-        }
-    };
+            localStorage.setItem(historyIndex++, $textArea.html());
+        },
 
-    let copy = () => {
-        selection = document.getSelection();
-        buffer = selection.toString();
-        alert(buffer);
-    };
+        historyIteration = (direction) => {
+            if (direction && historyIndex < localStorage.length - 1) {
+                $textArea.html(localStorage.getItem(++historyIndex));
+            } else if (!direction && historyIndex > -1) {
+                $textArea.html(localStorage.getItem(--historyIndex));
+            }
+        },
 
-    let paste = () =>{
-        selection = document.getSelection();
-        let range = selection.getRangeAt(0);
-        range.deleteContents();
-        range.insertNode();
-    };
+        copy = () => {
+            selection = document.getSelection();
+            buffer = selection.toSource();
+            alert(buffer);
+        },
+
+        paste = () => {
+            selection = document.getSelection();
+            let range = selection.getRangeAt(0),
+                node = document.createTextNode(buffer);
+            alert(node.wholeText);
+            range.deleteContents();
+            range.insertNode(node);
+        },
+
+        insertImg = () => {
+            $picForm.modal('show');
+            $picForm.on('shown.bs.modal', () => {
+                $picUrlInput.focus();
+            });
+            $picBtnConfirm.click(() => {
+                let val = $picUrlInput.val();
+                execCmd("insertImage", false, val);
+                $picForm.modal('hide');
+            });
+            $picBtnCancel.click(()=>{
+                $picForm.modal('hide');
+            });
+        };
 
     return {
         init: () => {
@@ -88,14 +112,17 @@
             $fwdDropdown.click(() => {
                 execCmd("redo");
             });
-            $cutDropdown.click(()=>{
+            $cutDropdown.click(() => {
                 execCmd("cut");
             });
-            $copyDropdown.click(()=>{
+            $copyDropdown.click(() => {
                 copy();
             });
-            $pasteDropdown.click(()=>{
+            $pasteDropdown.click(() => {
                 paste();
+            });
+            $imgBtn.click(() => {
+                insertImg();
             })
         }
     }
