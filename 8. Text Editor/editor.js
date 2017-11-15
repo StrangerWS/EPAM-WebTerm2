@@ -1,4 +1,4 @@
-;var TextEditor = (() => {
+;let TextEditor = (() => {
     'use strict';
     let $boldBtn = $('#bold-btn'),
         $italicBtn = $('#italic-btn'),
@@ -11,31 +11,25 @@
         $leftAlignBtn = $('#left-align-btn'),
         $rightAlignBtn = $('#right-align-btn'),
         $centerAlignBtn = $('#center-align-btn'),
-        $justifyAlignBtn = $('#justify-align-btn'),
+        $cutDropdown = $('#cut-dropdown'),
+        $copyDropdown = $('#copy-dropdown'),
+        $pasteDropdown = $('#paste-dropdown'),
+        $pasteTextDropdown = $('#paste-text-dropdown'),
+        historyIndex = 0,
         selection,
-        historyIndex = 0;
+        buffer;
 
     let checkAvaliable = () => {
         $backBtn.disabled = (historyIndex === 0);
         $forwardBtn.disabled = (historyIndex === localStorage.length);
     };
-    let decorate = (decorator) => {
-        selection = document.getSelection();
-        let range = selection.getRangeAt(0),
-            selectedContent = selection.toString(),
-            $span = $(decorator).html(selectedContent);
+    let execCmd = (decorator, ui, value) => {
+        document.execCommand(decorator, ui, value);
+    };
 
-        alert(range.startContainer.textContent);
-        range.deleteContents();
-        range.insertNode($span.get(0));
-        saveInHistory();
-    };
-    let setAlign = (direction) => {
-        $textArea.addClass(direction + "-align");
-    };
     let saveInHistory = () => {
-        if (historyIndex !== localStorage.length){
-            for (let i = historyIndex; i < localStorage.length; i++){
+        if (historyIndex !== localStorage.length) {
+            for (let i = historyIndex; i < localStorage.length; i++) {
                 localStorage.removeItem(i);
             }
         }
@@ -49,42 +43,60 @@
         }
     };
 
+    let copy = () => {
+        selection = document.getSelection();
+        buffer = selection.toString();
+        alert(buffer);
+    };
+
+    let paste = () =>{
+        selection = document.getSelection();
+        let range = selection.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode();
+    };
+
     return {
         init: () => {
-            saveInHistory();
             $boldBtn.click(() => {
-                decorate("<b />");
+                execCmd("bold");
             });
             $italicBtn.click(() => {
-                decorate("<i />");
+                execCmd("italic");
             });
             $underlineBtn.click(() => {
-                decorate("<u />");
+                execCmd("underline");
             });
             $leftAlignBtn.click(() => {
-                setAlign("left");
-            });
-            $centerAlignBtn.click(() => {
-                setAlign("center");
+                execCmd("justifyLeft");
             });
             $rightAlignBtn.click(() => {
-                setAlign("right");
+                execCmd("justifyRight");
             });
-            $justifyAlignBtn.click(() => {
-                setAlign("justify");
+            $centerAlignBtn.click(() => {
+                execCmd("justifyCenter");
             });
             $backBtn.click(() => {
-                historyIteration(false)
+                execCmd("undo");
             });
             $backDropdown.click(() => {
-                historyIteration(false)
+                execCmd("undo");
             });
             $forwardBtn.click(() => {
-                historyIteration(true)
+                execCmd("redo");
             });
             $fwdDropdown.click(() => {
-                historyIteration(true)
+                execCmd("redo");
             });
+            $cutDropdown.click(()=>{
+                execCmd("cut");
+            });
+            $copyDropdown.click(()=>{
+                copy();
+            });
+            $pasteDropdown.click(()=>{
+                paste();
+            })
         }
     }
 })();
