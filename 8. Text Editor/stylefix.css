@@ -5,24 +5,7 @@
     border: 1px solid #d0d0d0;
     border-radius: 5px;
 }
-.bold{
-    font-weight: bold;
-}
-.italic{
-    font-style: italic;
-}
-.underline{
-    text-decoration: underline;
-}
-.left-align{
-    text-align: left;
-}
-.right-align{
-    text-align: right;
-}
-.center-align{
-    text-align: center;
-}
-.justify-align{
-    text-align: justify;
+td, tr{
+    border: solid 1px black;
+    min-width: 50px;
 }

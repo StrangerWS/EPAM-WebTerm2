@@ -16,7 +16,11 @@
         $pasteDropdown = $('#paste-dropdown'),
         $pasteTextDropdown = $('#paste-text-dropdown'),
         $imgBtn = $("#img-btn"),
+        $tableBtn = $('#table-btn'),
+        $apiBtn = $('#api-btn'),
+        $apiDiv = $('#api-div'),
         historyIndex = 0,
+        buffer,
         selection,
 
         checkAvaliable = () => {
@@ -45,12 +49,49 @@
             }
         },
 
+        copy = () => {
+            selection = document.getSelection().getRangeAt(0);
+            let e = document.createElement('span');
+            e.appendChild(selection.cloneContents());
+            buffer = document.createTextNode('');
+            buffer = e.innerHTML;
+        },
         paste = () => {
-            alert("use Ctrl+V")
+            selection = document.getSelection().getRangeAt(0);
+            selection.deleteContents();
+            selection.insertNode(buffer);
         },
 
         insertImg = () => {
             execCmd("insertImage", false, prompt("Enter URL of a picture:"))
+        },
+        addTable = () => {
+            let rows = prompt("Enter the number of rows"),
+                columns = prompt("Enter the number of columns"),
+                table = "<table>";
+
+            for (let i = 0; i < rows; i++){
+                table += "<tr>";
+                for (let j = 0; j < columns; j++){
+                    table += "<td></td>";
+                }
+                table+="</tr>";
+            }
+            table += "</table>";
+
+            execCmd("insertHTML", false, table);
+        },
+        addControl = () => {
+            let iconUrl = prompt("Enter URL of an icon:"),
+                title = prompt("Enter title:"),
+                func = prompt("Enter function:"),
+                btn = document.createElement("button");
+
+            btn.className = "btn btn-light";
+            btn.title = title;
+            btn.onclick = func;
+            btn.innerHTML = "<img src='"+ iconUrl +"' height='30' width='30'>";
+            $apiDiv.appendChild(btn);
         };
 
     return {
@@ -89,7 +130,8 @@
                 execCmd("cut");
             });
             $copyDropdown.click(() => {
-                execCmd("copy");
+                //execCmd("copy");
+                copy();
             });
             $pasteDropdown.click(() => {
                 paste();
@@ -99,7 +141,13 @@
             });
             $imgBtn.click(() => {
                 insertImg();
-            })
+            });
+            $tableBtn.click(() => {
+                addTable();
+            });
+            $apiBtn.click(()=>{
+                addControl();
+            });
         }
     }
 })();
