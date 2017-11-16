@@ -16,13 +16,8 @@
         $pasteDropdown = $('#paste-dropdown'),
         $pasteTextDropdown = $('#paste-text-dropdown'),
         $imgBtn = $("#img-btn"),
-        $picForm = $("#pic-form"),
-        $picBtnConfirm = $("#pic-btn-confirm"),
-        $picBtnCancel = $("#pic-btn-cancel"),
-        $picUrlInput = $("#pic-url-input"),
         historyIndex = 0,
         selection,
-        buffer = "",
 
         checkAvaliable = () => {
             $backBtn.disabled = (historyIndex === 0);
@@ -50,34 +45,12 @@
             }
         },
 
-        copy = () => {
-            selection = document.getSelection();
-            buffer = selection.toSource();
-            alert(buffer);
-        },
-
         paste = () => {
-            selection = document.getSelection();
-            let range = selection.getRangeAt(0),
-                node = document.createTextNode(buffer);
-            alert(node.wholeText);
-            range.deleteContents();
-            range.insertNode(node);
+            alert("use Ctrl+V")
         },
 
         insertImg = () => {
-            $picForm.modal('show');
-            $picForm.on('shown.bs.modal', () => {
-                $picUrlInput.focus();
-            });
-            $picBtnConfirm.click(() => {
-                let val = $picUrlInput.val();
-                execCmd("insertImage", false, val);
-                $picForm.modal('hide');
-            });
-            $picBtnCancel.click(()=>{
-                $picForm.modal('hide');
-            });
+            execCmd("insertImage", false, prompt("Enter URL of a picture:"))
         };
 
     return {
@@ -116,10 +89,13 @@
                 execCmd("cut");
             });
             $copyDropdown.click(() => {
-                copy();
+                execCmd("copy");
             });
             $pasteDropdown.click(() => {
                 paste();
+            });
+            $pasteTextDropdown.click(() => {
+                execCmd("insertText");
             });
             $imgBtn.click(() => {
                 insertImg();
