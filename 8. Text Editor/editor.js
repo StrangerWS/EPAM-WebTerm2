@@ -19,34 +19,51 @@
         $tableBtn = $('#table-btn'),
         $apiBtn = $('#api-btn'),
         $apiDiv = $('#api-div'),
-        historyIndex = 0,
+        currentIndex = (localStorage.getItem("curIdx") === null) ? 0 : localStorage.getItem("curIdx"),
         buffer,
         selection,
 
-        checkAvaliable = () => {
-            $backBtn.disabled = (historyIndex === 0);
-            $forwardBtn.disabled = (historyIndex === localStorage.length);
+        checkAvailable = () => {
+            $backBtn.disabled = (currentIndex === 0);
+            $forwardBtn.disabled = (currentIndex === localStorage.length - 1);
+        },
+
+        saveInHistory = () => {
+            if (currentIndex === localStorage.length - 1) {
+                localStorage.setItem(localStorage.length, $textArea.html());
+                currentIndex++;
+            } else {
+                for (let i = localStorage.length - 1; i > currentIndex; i--) {
+                    localStorage.removeItem(i);
+                }
+                localStorage.setItem(localStorage.length, $textArea.html());
+                currentIndex++;
+            }
         },
 
         execCmd = (decorator, ui, value) => {
             document.execCommand(decorator, ui, value);
+            saveInHistory();
         },
 
-        saveInHistory = () => {
-            if (historyIndex !== localStorage.length) {
-                for (let i = historyIndex; i < localStorage.length; i++) {
-                    localStorage.removeItem(i);
-                }
+        loadText = () => {
+            if (localStorage.getItem(currentIndex) !== null) {
+                $textArea.html(localStorage.getItem(currentIndex));
             }
-            localStorage.setItem(historyIndex++, $textArea.html());
+            if (currentIndex === 0 && localStorage.getItem(currentIndex) === null){
+                localStorage.setItem(localStorage.length, $textArea.html());
+            }
         },
 
         historyIteration = (direction) => {
-            if (direction && historyIndex < localStorage.length - 1) {
-                $textArea.html(localStorage.getItem(++historyIndex));
-            } else if (!direction && historyIndex > -1) {
-                $textArea.html(localStorage.getItem(--historyIndex));
+            if (direction && currentIndex < localStorage.length - 1 ) {
+                currentIndex++;
+                $textArea.html(localStorage.getItem(currentIndex));
+            } else if (!direction && currentIndex > 0) {
+                currentIndex--;
+                $textArea.html(localStorage.getItem(currentIndex));
             }
+            checkAvailable();
         },
 
         copy = () => {
@@ -56,6 +73,7 @@
             buffer = document.createTextNode('');
             buffer = e.innerHTML;
         },
+
         paste = () => {
             selection = document.getSelection().getRangeAt(0);
             selection.deleteContents();
@@ -63,24 +81,28 @@
         },
 
         insertImg = () => {
-            execCmd("insertImage", false, prompt("Enter URL of a picture:"))
+            execCmd("insertImage", false, prompt("Enter URL of a picture:"));
+            saveInHistory();
         },
+
         addTable = () => {
             let rows = prompt("Enter the number of rows"),
                 columns = prompt("Enter the number of columns"),
                 table = "<table>";
 
-            for (let i = 0; i < rows; i++){
+            for (let i = 0; i < rows; i++) {
                 table += "<tr>";
-                for (let j = 0; j < columns; j++){
+                for (let j = 0; j < columns; j++) {
                     table += "<td></td>";
                 }
-                table+="</tr>";
+                table += "</tr>";
             }
             table += "</table>";
 
             execCmd("insertHTML", false, table);
+            saveInHistory();
         },
+
         addControl = () => {
             let iconUrl = prompt("Enter URL of an icon:"),
                 title = prompt("Enter title:"),
@@ -90,12 +112,14 @@
             btn.className = "btn btn-light";
             btn.title = title;
             btn.onclick = func;
-            btn.innerHTML = "<img src='"+ iconUrl +"' height='30' width='30'>";
+            btn.innerHTML = "<img src='" + iconUrl + "' height='30' width='30'>";
             $apiDiv.appendChild(btn);
+            saveInHistory();
         };
 
     return {
         init: () => {
+            loadText();
             $boldBtn.click(() => {
                 execCmd("bold");
             });
@@ -115,23 +139,27 @@
                 execCmd("justifyCenter");
             });
             $backBtn.click(() => {
-                execCmd("undo");
+                //execCmd("undo");
+                historyIteration(false);
             });
             $backDropdown.click(() => {
-                execCmd("undo");
+                //execCmd("undo");
+                historyIteration(false);
             });
             $forwardBtn.click(() => {
-                execCmd("redo");
+                //execCmd("redo");
+                historyIteration(true);
             });
             $fwdDropdown.click(() => {
-                execCmd("redo");
+                //execCmd("redo");
+                historyIteration(true);
             });
             $cutDropdown.click(() => {
                 execCmd("cut");
             });
             $copyDropdown.click(() => {
-                //execCmd("copy");
-                copy();
+                execCmd("copy");
+                //copy();
             });
             $pasteDropdown.click(() => {
                 paste();
@@ -145,7 +173,7 @@
             $tableBtn.click(() => {
                 addTable();
             });
-            $apiBtn.click(()=>{
+            $apiBtn.click(() => {
                 addControl();
             });
         }
