@@ -8,6 +8,25 @@
           integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 </head>
 <body>
+
+<div class="modal fade" id="modal-import">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Load the text (.json)</h4>
+            </div>
+            <div class="modal-body">
+                <form enctype="multipart/form-data" method="post">
+                    <input id="import-input" type="file" name="f">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="nav navbar container-fluid">
     <div class="btn-group">
         <div class="dropdown">
@@ -15,9 +34,9 @@
                 File
             </button>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">Import</a>
-                <a class="dropdown-item" href="#">Export</a>
-                <a class="dropdown-item" href="#">Print</a>
+                <a class="dropdown-item" id="import-dropdown" href="#">Import</a>
+                <a class="dropdown-item" id="export-dropdown" href="#">Export</a>
+                <a class="dropdown-item" id="print-dropdown" href="#">Print</a>
             </div>
         </div>
         <div class="dropdown">
@@ -88,7 +107,7 @@
     </div>
     <div class="btn-group" id="api-div">
         <button class="btn btn-light" id="api-btn"><img src="glyphicons/png/glyphicons-191-plus-sign.png" height="26"
-                                                          width="26"/></button>
+                                                        width="26"/></button>
     </div>
 </div>
 <hr/>
