@@ -50,13 +50,13 @@
             if (localStorage.getItem(currentIndex) !== null) {
                 $textArea.html(localStorage.getItem(currentIndex));
             }
-            if (currentIndex === 0 && localStorage.getItem(currentIndex) === null){
+            if (currentIndex === 0 && localStorage.getItem(currentIndex) === null) {
                 localStorage.setItem(localStorage.length, $textArea.html());
             }
         },
 
         historyIteration = (direction) => {
-            if (direction && currentIndex < localStorage.length - 1 ) {
+            if (direction && currentIndex < localStorage.length - 1) {
                 currentIndex++;
                 $textArea.html(localStorage.getItem(currentIndex));
             } else if (!direction && currentIndex > 0) {
@@ -75,9 +75,14 @@
         },
 
         paste = () => {
+            alert("use Ctrl+V");
+        },
+
+        pasteText = () => {
+            let text = prompt("Paste here:");
             selection = document.getSelection().getRangeAt(0);
             selection.deleteContents();
-            selection.insertNode(buffer);
+            selection.insertNode(document.createTextNode(text));
         },
 
         insertImg = () => {
@@ -100,7 +105,6 @@
             table += "</table>";
 
             execCmd("insertHTML", false, table);
-            saveInHistory();
         },
 
         addControl = () => {
@@ -111,10 +115,10 @@
 
             btn.className = "btn btn-light";
             btn.title = title;
-            btn.onclick = func;
+            btn.id = title;
             btn.innerHTML = "<img src='" + iconUrl + "' height='30' width='30'>";
-            $apiDiv.appendChild(btn);
-            saveInHistory();
+            $apiDiv[0].appendChild(btn);
+            $('#' + title).on('click', new Function("", func));
         };
 
     return {
@@ -139,15 +143,12 @@
                 execCmd("justifyCenter");
             });
             $backBtn.click(() => {
-                //execCmd("undo");
                 historyIteration(false);
             });
             $backDropdown.click(() => {
-                //execCmd("undo");
                 historyIteration(false);
             });
             $forwardBtn.click(() => {
-                //execCmd("redo");
                 historyIteration(true);
             });
             $fwdDropdown.click(() => {
@@ -159,10 +160,12 @@
             });
             $copyDropdown.click(() => {
                 execCmd("copy");
-                //copy();
             });
             $pasteDropdown.click(() => {
                 paste();
+            });
+            $pasteTextDropdown.click(() => {
+                pasteText();
             });
             $pasteTextDropdown.click(() => {
                 execCmd("insertText");
