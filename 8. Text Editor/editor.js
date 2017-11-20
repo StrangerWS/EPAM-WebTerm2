@@ -88,6 +88,17 @@
 
         },
 
+        print = () =>{
+            let text = $textArea.html();
+            let $printFrame = $('<iframe id="print-frame" style="display: none">');
+            $('body').append($printFrame);
+            let newDocument = $printFrame[0].contentDocument || $printFrame[0].contentWindow.document;
+            let printWindow = $printFrame[0].contentWindow || $printFrame[0];
+            newDocument.getElementsByTagName('body')[0].innerHTML = text;
+            printWindow.print();
+            $('#print-frame').remove();
+        },
+
         execCmd = (decorator, ui, value) => {
             document.execCommand(decorator, ui, value);
         },
@@ -232,6 +243,9 @@
             });
             $importDropdown.click(() => {
                 importJSON();
+            });
+            $printDropdown.click(()=>{
+                print();
             });
             $imgBtn.click(() => {
                 insertImg();
