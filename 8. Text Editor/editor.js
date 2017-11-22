@@ -1,31 +1,12 @@
 ;let TextEditor = (() => {
     'use strict';
-    let $boldBtn = $('#bold-btn'),
-        $italicBtn = $('#italic-btn'),
-        $underlineBtn = $('#underline-btn'),
-
-        $forwardBtn = $('#forward-btn'),
-        $backBtn = $('#back-btn'),
-        $backDropdown = $('#back-dropdown'),
-        $fwdDropdown = $('#fwd-dropdown'),
-
+    let $textDecorators = $('#text-decorators'),
+        $historyIterators = $('#history-iterators'),
         $textArea = $('#text-area'),
-
-        $leftAlignBtn = $('#left-align-btn'),
-        $rightAlignBtn = $('#right-align-btn'),
-        $centerAlignBtn = $('#center-align-btn'),
-
-        $cutDropdown = $('#cut-dropdown'),
-        $copyDropdown = $('#copy-dropdown'),
-        $pasteDropdown = $('#paste-dropdown'),
-        $pasteTextDropdown = $('#paste-text-dropdown'),
-
-        $importDropdown = $('#import-dropdown'),
-        $exportDropdown = $('#export-dropdown'),
-        $printDropdown = $('#print-dropdown'),
-
-        $imgBtn = $("#img-btn"),
-        $tableBtn = $('#table-btn'),
+        $textAlignDropdown = $('#text-align-dropdown'),
+        $editDropdown = $('#edit-dropdown'),
+        $fileDropdown = $('#file-dropdown'),
+        $structureInserters = $('#structure-inserters'),
 
         $modalImport = $('#modal-import'),
         $modalImportInput = $('#import-input'),
@@ -33,24 +14,20 @@
         $apiBtn = $('#api-btn'),
         $apiDiv = $('#api-div'),
 
-        currentIndex = (localStorage.getItem("curIdx") === null) ? 0 : localStorage.getItem("curIdx"),
+        currentIndex = (localStorage.getItem("0") === null) ? 1 : localStorage.getItem("0"),
         buffer,
         selection,
 
-        checkAvailable = () => {
-            $backBtn.disabled = (currentIndex === 0);
-            $forwardBtn.disabled = (currentIndex === localStorage.length - 1);
-        },
 
         saveInHistory = () => {
-            if (currentIndex === localStorage.length - 1) {
-                localStorage.setItem(localStorage.length, $textArea.html());
+            if (currentIndex === localStorage.length) {
+                localStorage.setItem(localStorage.length + 1, $textArea.html());
                 currentIndex++;
             } else {
-                for (let i = localStorage.length - 1; i > currentIndex; i--) {
+                for (let i = localStorage.length; i > currentIndex; i--) {
                     localStorage.removeItem(i);
                 }
-                localStorage.setItem(localStorage.length, $textArea.html());
+                localStorage.setItem(localStorage.length + 1, $textArea.html());
                 currentIndex++;
             }
         },
@@ -72,7 +49,7 @@
             let fr = new FileReader();
             $modalImport.modal('show');
             $modalImportInput.on('change', ((e) => {
-                fr.onload = (event) =>{
+                fr.onload = (event) => {
                     $textArea.html(JSON.parse(event.target.result).text);
                     saveInHistory();
                     $modalImport.modal('hide');
@@ -88,7 +65,7 @@
 
         },
 
-        print = () =>{
+        print = () => {
             let text = $textArea.html();
             let $printFrame = $('<iframe id="print-frame" style="display: none">');
             $('body').append($printFrame);
@@ -107,8 +84,8 @@
             if (localStorage.getItem(currentIndex) !== null) {
                 $textArea.html(localStorage.getItem(currentIndex));
             }
-            if (currentIndex === 0 && localStorage.getItem(currentIndex) === null) {
-                localStorage.setItem(localStorage.length, $textArea.html());
+            if (currentIndex === 1 && localStorage.getItem(currentIndex) === null) {
+                localStorage.setItem(localStorage.length + 1, $textArea.html());
             }
         },
 
@@ -116,11 +93,11 @@
             if (direction && currentIndex < localStorage.length - 1) {
                 currentIndex++;
                 $textArea.html(localStorage.getItem(currentIndex));
-            } else if (!direction && currentIndex > 0) {
+            } else if (!direction && currentIndex > 1) {
                 currentIndex--;
                 $textArea.html(localStorage.getItem(currentIndex));
             }
-            checkAvailable();
+            localStorage.setItem(0, currentIndex)
         },
 
         copy = () => {
@@ -187,74 +164,148 @@
     return {
         init: () => {
             loadText();
-            $boldBtn.click(() => {
-                execCmd("bold");
-                saveInHistory();
+            $fileDropdown.click((event) => {
+                let targetId = event.target.id || event.target.parentElement.id;
+                fileActions(targetId);
             });
-            $italicBtn.click(() => {
-                execCmd("italic");
-                saveInHistory();
+
+            function fileActions(id) {
+                switch (id) {
+                    case "export-dropdown":
+                        exportJSON();
+                        break;
+                    case "import-dropdown":
+                        importJSON();
+                        break;
+                    case "print-dropdown":
+                        print();
+                        break;
+                    default:
+                        break;
+
+                }
+            }
+
+            $editDropdown.click((event) => {
+                let targetId = event.target.id || event.target.parentElement.id;
+                editActions(targetId);
             });
-            $underlineBtn.click(() => {
-                execCmd("underline");
-                saveInHistory();
+
+            function editActions(id) {
+                switch (id) {
+                    case "back-dropdown":
+                        historyIteration(false);
+                        break;
+                    case "fwd-dropdown":
+                        historyIteration(true);
+                        break;
+                    case "cut-dropdown":
+                        execCmd("cut");
+                        saveInHistory();
+                        break;
+                    case "copy-dropdown":
+                        execCmd("copy");
+                        saveInHistory();
+                        break;
+                    case "paste-dropdown":
+                        paste();
+                        break;
+                    case "paste-text-dropdown":
+                        pasteText();
+                        saveInHistory();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            $textDecorators.click((event) => {
+                let targetId = event.target.id || event.target.parentElement.id;
+                decoratorActions(targetId);
             });
-            $leftAlignBtn.click(() => {
-                execCmd("justifyLeft");
-                saveInHistory();
+
+            function decoratorActions(id) {
+                switch (id) {
+                    case "bold-btn":
+                        execCmd("bold");
+                        saveInHistory();
+                        break;
+                    case "italic-btn":
+                        execCmd("italic");
+                        saveInHistory();
+                        break;
+                    case "underline-btn":
+                        execCmd("underline");
+                        saveInHistory();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            $textAlignDropdown.click((event) => {
+                let targetId = event.target.id || event.target.parentElement.id;
+                alignActions(targetId);
             });
-            $rightAlignBtn.click(() => {
-                execCmd("justifyRight");
-                saveInHistory();
+
+            function alignActions(id) {
+                switch (id) {
+                    case "left-align-btn":
+                        execCmd("justifyLeft");
+                        saveInHistory();
+                        break;
+                    case "right-align-btn":
+                        execCmd("justifyRight");
+                        saveInHistory();
+                        break;
+                    case "center-align-btn":
+                        execCmd("justifyCenter");
+                        saveInHistory();
+                        break;
+                    default:
+                        break;
+
+                }
+            }
+
+            $historyIterators.click((event) => {
+                let targetId = event.target.id || event.target.parentElement.id;
+                historyActions(targetId);
             });
-            $centerAlignBtn.click(() => {
-                execCmd("justifyCenter");
-                saveInHistory();
+
+            function historyActions(id) {
+                switch (id) {
+                    case "back-btn":
+                        historyIteration(false);
+                        break;
+                    case "forward-btn":
+                        historyIteration(true);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            $structureInserters.click((event) => {
+                let targetId = event.target.id || event.target.parentElement.id;
+                structureActions(targetId);
             });
-            $backBtn.click(() => {
-                historyIteration(false);
-            });
-            $backDropdown.click(() => {
-                historyIteration(false);
-            });
-            $forwardBtn.click(() => {
-                historyIteration(true);
-            });
-            $fwdDropdown.click(() => {
-                historyIteration(true);
-            });
-            $cutDropdown.click(() => {
-                execCmd("cut");
-                saveInHistory();
-            });
-            $copyDropdown.click(() => {
-                execCmd("copy");
-                saveInHistory();
-            });
-            $pasteDropdown.click(() => {
-                paste();
-            });
-            $pasteTextDropdown.click(() => {
-                pasteText();
-                saveInHistory();
-            });
-            $exportDropdown.click(() => {
-                exportJSON();
-            });
-            $importDropdown.click(() => {
-                importJSON();
-            });
-            $printDropdown.click(()=>{
-                print();
-            });
-            $imgBtn.click(() => {
-                insertImg();
-                saveInHistory();
-            });
-            $tableBtn.click(() => {
-                addTable();
-                saveInHistory();
-            });
+
+            function structureActions(id) {
+                switch (id) {
+                    case "img-btn":
+                        insertImg();
+                        saveInHistory();
+                        break;
+                    case "table-btn":
+                        addTable();
+                        saveInHistory();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
             $apiBtn.click(() => {
                 addControl();
             });
@@ -263,7 +314,6 @@
 })();
 
 $(document).ready(() => {
-    localStorage.clear();
     TextEditor.init();
 });
 

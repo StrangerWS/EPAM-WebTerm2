@@ -33,7 +33,7 @@
             <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
                 File
             </button>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu" id="file-dropdown">
                 <a class="dropdown-item" id="import-dropdown" href="#">Import</a>
                 <a class="dropdown-item" id="export-dropdown" href="#">Export</a>
                 <a class="dropdown-item" id="print-dropdown" href="#">Print</a>
@@ -43,7 +43,7 @@
             <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
                 Edit
             </button>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu" id="edit-dropdown">
                 <a class="dropdown-item" id="back-dropdown" href="#"><img
                         src="glyphicons/png/glyphicons-222-unshare.png" height="18"
                         width="24"/> Undo</a>
@@ -69,13 +69,13 @@
 </div>
 <hr/>
 <div class="container-fluid">
-    <div class="btn-group">
+    <div class="btn-group" id="history-iterators">
         <button class="btn btn-light" id="back-btn"><img src="glyphicons/png/glyphicons-222-unshare.png" height="18"
                                                          width="24"/></button>
         <button class="btn btn-light" id="forward-btn"><img src="glyphicons/png/glyphicons-223-share.png" height="18"
                                                             width="24"/></button>
     </div>
-    <div class="btn-group">
+    <div class="btn-group" id="text-decorators">
         <button class="btn btn-light" id="bold-btn"><img src="glyphicons/png/glyphicons-103-bold.png" height="24"
                                                          width="19"/></button>
         <button class="btn btn-light" id="italic-btn"><img src="glyphicons/png/glyphicons-102-italic.png" height="24"
@@ -84,7 +84,7 @@
                                                               height="24" width="20"/></button>
     </div>
     <div class="btn-group">
-        <div class="dropdown">
+        <div class="dropdown" id="text-align-dropdown">
             <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown"><img
                     src="glyphicons/png/glyphicons-114-justify.png"
                     height="21" width="24"/></button>
@@ -99,7 +99,7 @@
             </div>
         </div>
     </div>
-    <div class="btn-group">
+    <div class="btn-group" id="structure-inserters">
         <button class="btn btn-light" id="table-btn"><img src="glyphicons/png/glyphicons-120-table.png" height="24"
                                                           width="24"/></button>
         <button class="btn btn-light" id="img-btn"><img src="glyphicons/png/glyphicons-139-picture.png" height="20"
