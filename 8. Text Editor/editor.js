@@ -21,13 +21,13 @@
 
         saveInHistory = () => {
             if (currentIndex === localStorage.length) {
-                localStorage.setItem(localStorage.length + 1, $textArea.html());
+                localStorage.setItem(currentIndex + 1, $textArea.html());
                 currentIndex++;
             } else {
                 for (let i = localStorage.length; i > currentIndex; i--) {
                     localStorage.removeItem(i);
                 }
-                localStorage.setItem(localStorage.length + 1, $textArea.html());
+                localStorage.setItem(currentIndex + 1, $textArea.html());
                 currentIndex++;
             }
         },
@@ -85,7 +85,7 @@
                 $textArea.html(localStorage.getItem(currentIndex));
             }
             if (currentIndex === 1 && localStorage.getItem(currentIndex) === null) {
-                localStorage.setItem(localStorage.length + 1, $textArea.html());
+                localStorage.setItem(currentIndex, $textArea.html());
             }
         },
 
@@ -164,6 +164,7 @@
     return {
         init: () => {
             loadText();
+            localStorage.setItem(0, currentIndex);
             $fileDropdown.click((event) => {
                 let targetId = event.target.id || event.target.parentElement.id;
                 fileActions(targetId);
@@ -314,6 +315,7 @@
 })();
 
 $(document).ready(() => {
+    //localStorage.clear();
     TextEditor.init();
 });
 
