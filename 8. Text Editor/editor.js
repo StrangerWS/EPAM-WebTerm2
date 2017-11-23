@@ -11,10 +11,25 @@
         $modalImport = $('#modal-import'),
         $modalImportInput = $('#import-input'),
 
+        $modalApi = $('#modal-api'),
+        $apiImgInput = $('#api-img-input'),
+        $apiCodeInput = $('#api-code-input'),
+        $apiTitleInput = $('#api-title-input'),
+        $modalApiBtn = $('#modal-api-btn'),
+
+        $modalTable = $('#modal-table'),
+        $rowsInput = $('#rows-input'),
+        $colsInput = $('#cols-input'),
+        $modalTableBtn = $('#modal-table-btn'),
+
+        $modalImg = $('#modal-img'),
+        $imgInput = $('#img-input'),
+        $modalImgBtn = $('#modal-img-btn'),
+
         $apiBtn = $('#api-btn'),
         $apiDiv = $('#api-div'),
 
-        currentIndex = (localStorage.getItem("0") === null) ? 1 : localStorage.getItem("0"),
+        currentIndex = (localStorage.getItem(0) === null) ? 1 : localStorage.getItem(0),
         buffer,
         selection,
 
@@ -55,6 +70,12 @@
                     $modalImport.modal('hide');
                 };
 
+                fr.onerror = (event) => {
+                    $modalImportInput.val('');
+                    $modalImport.modal('hide');
+                    alert(event.target.result);
+                };
+
                 let files = e.target.files;
                 if (files.length === 1) {
                     let file = files[0];
@@ -62,7 +83,9 @@
                 }
             }));
 
-
+            $modalImport.on('hide.bs.modal', (e) => {
+                $modalImportInput.val('');
+            })
         },
 
         print = () => {
@@ -81,23 +104,39 @@
         },
 
         loadText = () => {
-            if (localStorage.getItem(currentIndex) !== null) {
-                $textArea.html(localStorage.getItem(currentIndex));
-            }
-            if (currentIndex === 1 && localStorage.getItem(currentIndex) === null) {
+            let storageItem = localStorage.getItem(currentIndex);
+            if (storageItem !== null) {
+                $textArea.html(storageItem);
+            } else if (currentIndex === 1) {
                 localStorage.setItem(currentIndex, $textArea.html());
+            } else {
+                for (let i = currentIndex - 1; i > 1; i--) {
+                    if (localStorage.getItem(i) !== null) $textArea.html(localStorage.getItem(i))
+                }
             }
         },
 
         historyIteration = (direction) => {
-            if (direction && currentIndex < localStorage.length - 1) {
-                currentIndex++;
-                $textArea.html(localStorage.getItem(currentIndex));
+            if (direction && currentIndex < localStorage.length) {
+                if (localStorage.getItem(currentIndex + 1) !== null) {
+                    currentIndex++;
+                    $textArea.html(localStorage.getItem(currentIndex));
+                }
             } else if (!direction && currentIndex > 1) {
-                currentIndex--;
-                $textArea.html(localStorage.getItem(currentIndex));
+                if (localStorage.getItem(currentIndex - 1) !== null) {
+                    currentIndex--;
+                    $textArea.html(localStorage.getItem(currentIndex));
+                }
             }
-            localStorage.setItem(0, currentIndex)
+            localStorage.setItem(0, currentIndex);
+        },
+
+        cut = () => {
+            selection = document.getSelection().getRangeAt(0);
+            let elem = document.createElement('span');
+            elem.appendChild(selection.cloneContents());
+            selection.deleteContents();
+            buffer = elem.innerHTML;
         },
 
         copy = () => {
@@ -116,46 +155,108 @@
         },
 
         insertImg = () => {
-            execCmd("insertImage", false, prompt("Enter URL of a picture:"));
-            saveInHistory();
+            let fr = new FileReader(),
+                file;
+            $modalImg.modal('show');
+            $imgInput.on('change', ((e) => {
+                let files = e.target.files;
+                if (files.length === 1) {
+                    file = files[0];
+                }
+            }));
+
+            $modalImgBtn.on('click', () => {
+                fr.readAsDataURL(file);
+            });
+
+            fr.onload = (event) => {
+                $textArea.focus();
+                execCmd("insertImage", false, event.target.result);
+                $modalImg.modal('hide');
+            };
+
+            fr.onerror = (event) => {
+                $imgInput.val('');
+                $modalImg.modal('hide');
+                alert(event.target.result);
+            };
+
+            $modalImg.on('hide.bs.modal', (e) => {
+                $imgInput.val('');
+            })
         },
 
         addTable = () => {
-            let rows = prompt("Enter the number of rows"),
-                columns = prompt("Enter the number of columns"),
-                table = "<table>";
+            let table = document.createElement('table'),
+                tableContent = '';
+            selection = document.getSelection().getRangeAt(0);
+            $modalTable.modal('show');
+            $modalTableBtn.on('click', ((e) => {
 
-            for (let i = 0; i < rows; i++) {
-                table += "<tr>";
-                for (let j = 0; j < columns; j++) {
-                    table += "<td></td>";
+                for (let i = 0; i < $rowsInput.val(); i++) {
+                    tableContent += "<tr>";
+                    for (let j = 0; j < $colsInput.val(); j++) {
+                        tableContent += "<td></td>";
+                    }
+                    tableContent += "</tr>";
                 }
-                table += "</tr>";
-            }
-            table += "</table>";
+                $modalTable.modal('hide');
 
-            execCmd("insertHTML", false, table);
+                selection.deleteContents();
+                alert(tableContent);
+                table.innerHTML = tableContent;
+                selection.insertNode(table);
+            }));
+
+            $modalTable.on('hide.bs.modal', (e) => {
+                $rowsInput.val('');
+                $colsInput.val('');
+            })
         },
 
         addControl = () => {
-            let iconUrl = prompt("Enter URL of an icon:"),
-                title = prompt("Enter title:"),
-                func = prompt("Enter function:"),
+            let iconUrl,
+                fr = new FileReader(),
                 btn = document.createElement("button");
 
-            btn.className = "btn btn-light";
-            btn.title = title;
-            btn.id = title;
-            btn.innerHTML = "<img src='" + iconUrl + "' height='30' width='30'>";
-            $apiDiv[0].appendChild(btn);
-            $('#' + title).on('click', new Function("", func));
-        };
+            $apiImgInput.on('change', ((e) => {
+                fr.onload = (event) => {
+                    iconUrl = event.target.result;
+                    $modalImg.modal('hide');
+                };
 
-    document.onkeydown = function (e) {
-        if (e.ctrlKey && e.keyCode === 86) {
-            saveInHistory();
-        }
-    };
+                fr.onerror = (event) => {
+                    $apiImgInput.val('');
+                    $modalApi.modal('hide');
+                    alert(event.target.error());
+                };
+
+                let files = e.target.files;
+                if (files.length === 1) {
+                    let file = files[0];
+                    fr.readAsDataURL(file);
+                }
+            }));
+
+            $modalApi.modal('show');
+            $modalApiBtn.on('click', ((e) => {
+                btn.className = "btn btn-light";
+                btn.title = $apiTitleInput.val();
+                btn.id = $apiTitleInput.val();
+                btn.innerHTML = "<img src='" + iconUrl + "' height='30' width='30'>";
+                $apiDiv[0].appendChild(btn);
+                $('#' + btn.id).on('click', new Function("", $apiCodeInput.val()));
+
+                $modalApi.modal('hide');
+            }));
+
+            $modalApi.on('hide.bs.modal', (e) => {
+                $apiImgInput.val('');
+                $apiCodeInput.val('');
+                $apiTitleInput.val('');
+            })
+
+        };
 
     return {
         init: () => {
@@ -197,16 +298,15 @@
                         historyIteration(true);
                         break;
                     case "cut-dropdown":
-                        execCmd("cut");
+                        cut();
                         saveInHistory();
                         break;
                     case "copy-dropdown":
-                        //execCmd("copy");
                         copy();
-                        saveInHistory();
                         break;
                     case "paste-dropdown":
                         paste();
+                        saveInHistory();
                         break;
                     case "paste-text-dropdown":
                         pasteAsText();
@@ -293,11 +393,9 @@
                 switch (id) {
                     case "img-btn":
                         insertImg();
-                        saveInHistory();
                         break;
                     case "table-btn":
                         addTable();
-                        saveInHistory();
                         break;
                     default:
                         break;
