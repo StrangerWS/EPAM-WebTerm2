@@ -29,7 +29,7 @@
         $apiBtn = $('#api-btn'),
         $apiDiv = $('#api-div'),
 
-        currentIndex = (localStorage.getItem(0) === null) ? 1 : localStorage.getItem(0),
+        currentIndex = (localStorage.getItem(0) === null) ? 1 : localStorage.getItem(0) - 0,
         buffer,
         selection,
 
@@ -45,6 +45,7 @@
                 localStorage.setItem(currentIndex + 1, $textArea.html());
                 currentIndex++;
             }
+            localStorage.setItem(0, currentIndex);
         },
 
         exportJSON = () => {
@@ -111,7 +112,10 @@
                 localStorage.setItem(currentIndex, $textArea.html());
             } else {
                 for (let i = currentIndex - 1; i > 1; i--) {
-                    if (localStorage.getItem(i) !== null) $textArea.html(localStorage.getItem(i))
+                    if (localStorage.getItem(i) !== null) {
+                        $textArea.html(localStorage.getItem(i));
+                        break;
+                    }
                 }
             }
         },
@@ -156,23 +160,24 @@
 
         insertImg = () => {
             let fr = new FileReader(),
-                file;
+                file,
+                elem = document.activeElement;
+
+
             $modalImg.modal('show');
             $imgInput.on('change', ((e) => {
                 let files = e.target.files;
                 if (files.length === 1) {
                     file = files[0];
                 }
+                fr.readAsDataURL(file);
             }));
 
-            $modalImgBtn.on('click', () => {
-                fr.readAsDataURL(file);
-            });
-
             fr.onload = (event) => {
-                $textArea.focus();
-                execCmd("insertImage", false, event.target.result);
-                $modalImg.modal('hide');
+                    execCmd("insertImage", false, event.target.result);
+                    saveInHistory();
+                    $imgInput.val('');
+                    $modalImg.modal('hide');
             };
 
             fr.onerror = (event) => {
@@ -206,6 +211,7 @@
                 alert(tableContent);
                 table.innerHTML = tableContent;
                 selection.insertNode(table);
+                saveInHistory();
             }));
 
             $modalTable.on('hide.bs.modal', (e) => {
