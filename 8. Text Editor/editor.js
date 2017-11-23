@@ -102,21 +102,17 @@
 
         copy = () => {
             selection = document.getSelection().getRangeAt(0);
-            let e = document.createElement('span');
-            e.appendChild(selection.cloneContents());
-            buffer = document.createTextNode('');
-            buffer = e.innerHTML;
+            let elem = document.createElement('span');
+            elem.appendChild(selection.cloneContents());
+            buffer = elem.innerHTML;
         },
 
         paste = () => {
-            alert("use Ctrl+V");
+            execCmd("insertHTML", false, buffer);
         },
 
-        pasteText = () => {
-            let text = prompt("Paste here:");
-            selection = document.getSelection().getRangeAt(0);
-            selection.deleteContents();
-            selection.insertNode(document.createTextNode(text));
+        pasteAsText = () => {
+            execCmd("insertHTML", false, buffer.replace(/<\/?[^>]+(>|$)/g, ""));
         },
 
         insertImg = () => {
@@ -205,14 +201,15 @@
                         saveInHistory();
                         break;
                     case "copy-dropdown":
-                        execCmd("copy");
+                        //execCmd("copy");
+                        copy();
                         saveInHistory();
                         break;
                     case "paste-dropdown":
                         paste();
                         break;
                     case "paste-text-dropdown":
-                        pasteText();
+                        pasteAsText();
                         saveInHistory();
                         break;
                     default:
