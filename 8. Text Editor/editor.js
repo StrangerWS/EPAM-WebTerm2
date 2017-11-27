@@ -90,9 +90,12 @@
         },
 
         print = () => {
-            let text = $textArea.html();
-            let $printFrame = $('<iframe id="print-frame" style="display: none">');
-            $('body').append($printFrame);
+            let text = $textArea.html(),
+                $printFrame = $('<iframe id="print-frame" style="display: none">'),
+                $body = $('body');
+
+            $body.append($printFrame);
+            $body.styleSheets = document.styleSheets;
             let newDocument = $printFrame[0].contentDocument || $printFrame[0].contentWindow.document;
             let printWindow = $printFrame[0].contentWindow || $printFrame[0];
             newDocument.getElementsByTagName('body')[0].innerHTML = text;
@@ -159,32 +162,20 @@
         },
 
         insertImg = () => {
-            let fr = new FileReader(),
-                file,
-                elem = document.activeElement;
-
-
+            let img;
             $modalImg.modal('show');
-            $imgInput.on('change', ((e) => {
-                let files = e.target.files;
-                if (files.length === 1) {
-                    file = files[0];
+            $modalImgBtn.on('click', ((e) => {
+                img = $imgInput[0].files[0];
+                $textArea.focus();
+                if (img) {
+                    let fr = new FileReader();
+                    fr.onload = (event) => execCmd('insertImage', false, event.target.result);
+                    fr.readAsDataURL(img);
                 }
-                fr.readAsDataURL(file);
+                $modalImg.modal('hide');
             }));
 
-            fr.onload = (event) => {
-                    execCmd("insertImage", false, event.target.result);
-                    saveInHistory();
-                    $imgInput.val('');
-                    $modalImg.modal('hide');
-            };
 
-            fr.onerror = (event) => {
-                $imgInput.val('');
-                $modalImg.modal('hide');
-                alert(event.target.result);
-            };
 
             $modalImg.on('hide.bs.modal', (e) => {
                 $imgInput.val('');
@@ -194,30 +185,32 @@
         addTable = () => {
             let table = document.createElement('table'),
                 tableContent = '';
-            selection = document.getSelection().getRangeAt(0);
-            $modalTable.modal('show');
-            $modalTableBtn.on('click', ((e) => {
+            {
+                selection = document.getSelection().getRangeAt(0);
+                $modalTable.modal('show');
+                $modalTableBtn.on('click', ((e) => {
 
-                for (let i = 0; i < $rowsInput.val(); i++) {
-                    tableContent += "<tr>";
-                    for (let j = 0; j < $colsInput.val(); j++) {
-                        tableContent += "<td></td>";
+                    for (let i = 0; i < $rowsInput.val(); i++) {
+                        tableContent += "<tr>";
+                        for (let j = 0; j < $colsInput.val(); j++) {
+                            tableContent += "<td></td>";
+                        }
+                        tableContent += "</tr>";
                     }
-                    tableContent += "</tr>";
-                }
-                $modalTable.modal('hide');
+                    $modalTable.modal('hide');
 
-                selection.deleteContents();
-                alert(tableContent);
-                table.innerHTML = tableContent;
-                selection.insertNode(table);
-                saveInHistory();
-            }));
+                    selection.deleteContents();
+                    alert(tableContent);
+                    table.innerHTML = tableContent;
+                    selection.insertNode(table);
+                    saveInHistory();
+                }));
 
-            $modalTable.on('hide.bs.modal', (e) => {
-                $rowsInput.val('');
-                $colsInput.val('');
-            })
+                $modalTable.on('hide.bs.modal', (e) => {
+                    $rowsInput.val('');
+                    $colsInput.val('');
+                })
+            }
         },
 
         addControl = () => {
@@ -262,7 +255,36 @@
                 $apiTitleInput.val('');
             })
 
+        },
+
+        keyHandlers = (event) => {
+            event.preventDefault();
+            if (event.keyCode === 80 && e.ctrlKey){
+                print();
+            }
+            if (event.ctrlKey && event.keyCode === 88 ){
+                cut();
+            }
+            if (event.ctrlKey && event.keyCode === 67){
+                copy();
+            }
+            if (event.ctrlKey && event.keyCode === 86){
+                paste();
+            }
+            if (event.ctrlKey && event.keyCode === 86 && event.shiftKey){
+                pasteAsText();
+            }
+            if (event.ctrlKey && event.keyCode === 83){
+                exportJSON();
+            }
+            if (event.ctrlKey && event.keyCode === 79){
+                importJSON();
+            }
+
         };
+
+
+
 
     return {
         init: () => {
