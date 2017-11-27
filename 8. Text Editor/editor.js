@@ -28,6 +28,7 @@
 
         $apiBtn = $('#api-btn'),
         $apiDiv = $('#api-div'),
+        $body = $('body'),
 
         currentIndex = (localStorage.getItem(0) === null) ? 1 : localStorage.getItem(0) - 0,
         buffer,
@@ -91,14 +92,23 @@
 
         print = () => {
             let text = $textArea.html(),
-                $printFrame = $('<iframe id="print-frame" style="display: none">'),
-                $body = $('body');
+                $printFrame = $('<iframe id="print-frame" style="display: none">');
 
             $body.append($printFrame);
-            $body.styleSheets = document.styleSheets;
-            let newDocument = $printFrame[0].contentDocument || $printFrame[0].contentWindow.document;
-            let printWindow = $printFrame[0].contentWindow || $printFrame[0];
+
+            let newDocument = $printFrame[0].contentWindow.document,
+                printWindow = $printFrame[0].contentWindow,
+                css = newDocument.createElement('link');
+
+            css.rel = 'stylesheet';
+            css.type = 'text/css';
+            css.href = 'stylefix.css';
+
             newDocument.getElementsByTagName('body')[0].innerHTML = text;
+            newDocument.getElementsByTagName('head')[0].innerHTML = '<style> td, tr { border: solid 1px black; min-width: 50px; } </style>';
+
+            alert(newDocument.head.innerHTML);
+
             printWindow.print();
             $('#print-frame').remove();
         },
@@ -176,7 +186,6 @@
             }));
 
 
-
             $modalImg.on('hide.bs.modal', (e) => {
                 $imgInput.val('');
             })
@@ -185,6 +194,7 @@
         addTable = () => {
             let table = document.createElement('table'),
                 tableContent = '';
+
             {
                 selection = document.getSelection().getRangeAt(0);
                 $modalTable.modal('show');
@@ -200,10 +210,8 @@
                     $modalTable.modal('hide');
 
                     selection.deleteContents();
-                    alert(tableContent);
                     table.innerHTML = tableContent;
                     selection.insertNode(table);
-                    saveInHistory();
                 }));
 
                 $modalTable.on('hide.bs.modal', (e) => {
@@ -255,35 +263,54 @@
                 $apiTitleInput.val('');
             })
 
-        },
-
-        keyHandlers = (event) => {
-            event.preventDefault();
-            if (event.keyCode === 80 && e.ctrlKey){
-                print();
-            }
-            if (event.ctrlKey && event.keyCode === 88 ){
-                cut();
-            }
-            if (event.ctrlKey && event.keyCode === 67){
-                copy();
-            }
-            if (event.ctrlKey && event.keyCode === 86){
-                paste();
-            }
-            if (event.ctrlKey && event.keyCode === 86 && event.shiftKey){
-                pasteAsText();
-            }
-            if (event.ctrlKey && event.keyCode === 83){
-                exportJSON();
-            }
-            if (event.ctrlKey && event.keyCode === 79){
-                importJSON();
-            }
-
         };
 
-
+    document.onkeydown = (event) => {
+        let key = event.keyCode;
+        if (event.ctrlKey) {
+            switch (key) {
+                case 80:
+                    print();
+                    break;
+                case 88:
+                    event.preventDefault();
+                    cut();
+                    saveInHistory();
+                    break;
+                case 67:
+                    event.preventDefault();
+                    copy();
+                    break;
+                case 86:
+                    event.preventDefault();
+                    paste();
+                    saveInHistory();
+                    break;
+                case 83:
+                    exportJSON();
+                    break;
+                case 79:
+                    importJSON();
+                    saveInHistory();
+                    break;
+                case 90:
+                    historyIteration(false);
+                    break;
+                case 89:
+                    historyIteration(true);
+                    break;
+                case 66:
+                    $textDecorators.click('bold-btn');
+                    break;
+                case 73:
+                    $textDecorators.click('italic-btn');
+                    break;
+                case 85:
+                    $textDecorators.click('underline-btn');
+                    break;
+            }
+        }
+    };
 
 
     return {
@@ -421,9 +448,11 @@
                 switch (id) {
                     case "img-btn":
                         insertImg();
+                        saveInHistory();
                         break;
                     case "table-btn":
                         addTable();
+                        saveInHistory();
                         break;
                     default:
                         break;
@@ -435,10 +464,10 @@
             });
         }
     }
-})();
+})
+();
 
 $(document).ready(() => {
-    //localStorage.clear();
     TextEditor.init();
 });
 

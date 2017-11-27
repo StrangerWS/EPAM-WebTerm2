@@ -1,11 +1,13 @@
-.text-editor-area{
+.text-editor-area {
     padding: 10px;
     width: 100%;
+    min-width: 600px;
     height: 100%;
     border: 1px solid #d0d0d0;
     border-radius: 5px;
 }
-td, tr{
+
+td, tr {
     border: solid 1px black;
     min-width: 50px;
 }
