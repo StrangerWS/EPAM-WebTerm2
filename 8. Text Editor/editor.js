@@ -36,17 +36,22 @@
 
 
         saveInHistory = () => {
-            if (currentIndex === localStorage.length) {
-                localStorage.setItem(currentIndex + 1, $textArea.html());
-                currentIndex++;
-            } else {
-                for (let i = localStorage.length; i > currentIndex; i--) {
-                    localStorage.removeItem(i);
+            try {
+                if (currentIndex === localStorage.length) {
+                    localStorage.setItem(currentIndex + 1, $textArea.html());
+                    currentIndex++;
+                } else {
+                    for (let i = localStorage.length; i > currentIndex; i--) {
+                        localStorage.removeItem(i);
+                    }
+                    localStorage.setItem(currentIndex + 1, $textArea.html());
+                    currentIndex++;
                 }
-                localStorage.setItem(currentIndex + 1, $textArea.html());
-                currentIndex++;
+                localStorage.setItem(0, currentIndex);
             }
-            localStorage.setItem(0, currentIndex);
+            catch (e) {
+                console.log(e.message);
+            }
         },
 
         exportJSON = () => {
@@ -85,7 +90,7 @@
                 }
             }));
 
-            $modalImport.on('hide.bs.modal', (e) => {
+            $modalImport.on('hide.bs.modal', () => {
                 $modalImportInput.val('');
             })
         },
@@ -107,14 +112,12 @@
             newDocument.getElementsByTagName('body')[0].innerHTML = text;
             newDocument.getElementsByTagName('head')[0].innerHTML = '<style> td, tr { border: solid 1px black; min-width: 50px; } </style>';
 
-            alert(newDocument.head.innerHTML);
-
             printWindow.print();
             $('#print-frame').remove();
         },
 
-        execCmd = (decorator, ui, value) => {
-            document.execCommand(decorator, ui, value);
+        execCmd = (decorator, value) => {
+            document.execCommand(decorator, false, value);
         },
 
         loadText = () => {
@@ -164,29 +167,29 @@
         },
 
         paste = () => {
-            execCmd("insertHTML", false, buffer);
+            execCmd("insertHTML", buffer);
         },
 
         pasteAsText = () => {
-            execCmd("insertHTML", false, buffer.replace(/<\/?[^>]+(>|$)/g, ""));
+            execCmd("insertHTML", buffer.replace(/<\/?[^>]+(>|$)/g, ""));
         },
 
         insertImg = () => {
             let img;
             $modalImg.modal('show');
-            $modalImgBtn.on('click', ((e) => {
+            $modalImgBtn.on('click', (() => {
                 img = $imgInput[0].files[0];
                 $textArea.focus();
                 if (img) {
                     let fr = new FileReader();
-                    fr.onload = (event) => execCmd('insertImage', false, event.target.result);
+                    fr.onload = (event) => execCmd('insertImage', event.target.result);
                     fr.readAsDataURL(img);
                 }
                 $modalImg.modal('hide');
             }));
 
 
-            $modalImg.on('hide.bs.modal', (e) => {
+            $modalImg.on('hide.bs.modal', () => {
                 $imgInput.val('');
             })
         },
@@ -198,7 +201,7 @@
             {
                 selection = document.getSelection().getRangeAt(0);
                 $modalTable.modal('show');
-                $modalTableBtn.on('click', ((e) => {
+                $modalTableBtn.on('click', (() => {
 
                     for (let i = 0; i < $rowsInput.val(); i++) {
                         tableContent += "<tr>";
@@ -214,7 +217,7 @@
                     selection.insertNode(table);
                 }));
 
-                $modalTable.on('hide.bs.modal', (e) => {
+                $modalTable.on('hide.bs.modal', () => {
                     $rowsInput.val('');
                     $colsInput.val('');
                 })
@@ -246,7 +249,7 @@
             }));
 
             $modalApi.modal('show');
-            $modalApiBtn.on('click', ((e) => {
+            $modalApiBtn.on('click', (() => {
                 btn.className = "btn btn-light";
                 btn.title = $apiTitleInput.val();
                 btn.id = $apiTitleInput.val();
@@ -257,7 +260,7 @@
                 $modalApi.modal('hide');
             }));
 
-            $modalApi.on('hide.bs.modal', (e) => {
+            $modalApi.on('hide.bs.modal', () => {
                 $apiImgInput.val('');
                 $apiCodeInput.val('');
                 $apiTitleInput.val('');
@@ -287,6 +290,7 @@
                     saveInHistory();
                     break;
                 case 83:
+                    event.preventDefault();
                     exportJSON();
                     break;
                 case 79:
